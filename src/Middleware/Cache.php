@@ -1,0 +1,144 @@
+<?php
+
+/**
+ * Cache Middleware
+ *
+ * @package    Cache
+ * @author     Flipbox Factory <hello@flipboxfactory.com>
+ * @copyright  2010-2016 Flipbox Digital Limited
+ * @license    https://github.com/FlipboxFactory/Cache/blob/master/LICENSE
+ * @version    Release: 1.0.0
+ * @link       https://github.com/FlipboxFactory/Cache
+ * @since      Class available since Release 1.0.0
+ */
+
+namespace Flipbox\Cache\Middleware;
+
+use Flipbox\Cache\Exceptions\InvalidCachePoolException;
+use Flipbox\Http\HttpFactory;
+use Flipbox\Relay\Middleware\AbstractMiddleware;
+use Psr\Cache\CacheItemPoolInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Stash\Interfaces\ItemInterface;
+
+class Cache extends AbstractMiddleware
+{
+
+    /**
+     * @var CacheItemPoolInterface The connection
+     */
+    public $pool;
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+
+        // Parent
+        parent::init();
+
+        // Ensure we have a valid pool
+        if (!$this->pool instanceof CacheItemPoolInterface) {
+
+            throw new InvalidCachePoolException(
+                sprintf(
+                    "The class '%s' requires a cache pool that is an instance of '%s'",
+                    get_class($this),
+                    'Psr\Cache\CacheItemPoolInterface'
+                )
+            );
+
+        }
+
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next = null)
+    {
+
+        // Do parent (logging)
+        parent::__invoke($request, $response);
+
+        // Create a cache key
+        $key = $this->getCacheKey($request);
+
+        /** @var ItemInterface $item */
+        $item = $this->pool->getItem($key);
+
+        // If it's cached
+        if ($item->isHit()) {
+
+            $this->info(
+                "Item found in Cache", [
+                'key' => $key,
+                'expires' => $item->getExpiration()
+            ]);
+
+            // Add response body
+            $response = $response->withBody(
+                HttpFactory::stream($item->get())
+            );
+
+            return $response;
+
+        } else {
+
+            $this->info(
+                "Item not found in Cache", [
+                'key' => $key
+            ]);
+
+        }
+
+        // Lock item
+        $item->lock();
+
+        // Next
+        $response = $next($request, $response);
+
+        // Only cache successful responses
+        if ($this->isResponseSuccessful($response)) {
+
+            // Set cache contents
+            $item->set($response->getBody()->getContents());
+
+            // Save cache item
+            $this->pool->save($item);
+
+            $this->info(
+                "Save item to Cache", [
+                'key' => $key,
+                'expires' => $item->getExpiration()
+            ]);
+
+        } else {
+
+            $this->info(
+                "Did not save to cache because request was unsuccessful.", [
+                'key' => $key,
+                'statusCode' => $response->getStatusCode()
+            ]);
+
+        }
+
+        return $response;
+
+    }
+
+    /**
+     * Returns the id used to cache a request.
+     *
+     * @param RequestInterface $request
+     *
+     * @return string
+     */
+    private function getCacheKey(RequestInterface $request)
+    {
+        return $request->getMethod() . md5((string)$request->getUri());
+    }
+
+}
