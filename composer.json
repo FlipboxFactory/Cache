@@ -29,6 +29,14 @@
     {
       "type": "vcs",
       "url": "https://github.com/FlipboxFactory/Skeleton.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/FlipboxFactory/Relay.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/FlipboxFactory/Http.git"
     }
   ]
 }
