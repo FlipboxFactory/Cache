@@ -45,7 +45,7 @@ class Factory
      *
      * @var DriverInterface[]
      */
-    protected $_registeredDrivers = [];
+    protected $registeredDrivers = [];
 
     /**
      * Constructor
@@ -57,7 +57,7 @@ class Factory
         $this->setLogger($logger);
 
         // Manually register the default driver
-        $this->_registeredDrivers['dummy'] = new DummyDriver();
+        $this->registeredDrivers['dummy'] = new DummyDriver();
     }
 
     /*******************************************
@@ -78,7 +78,6 @@ class Factory
 
         // Get driver from config
         if (!$driverType = ObjectHelper::findClassFromConfig($config)) {
-
             $driverType = $this->defaultDriver;
 
             $this->warning(
@@ -88,7 +87,6 @@ class Factory
                     'default' => $driverType
                 ]
             );
-
         }
 
         /** @var Pool $pool */
@@ -118,22 +116,20 @@ class Factory
      */
     public function autoGetDriver($identifier): DriverInterface
     {
-        if (!$driver = ArrayHelper::getValue($this->_registeredDrivers, $identifier)) {
-
+        if (!$driver = ArrayHelper::getValue($this->registeredDrivers, $identifier)) {
             $this->critical(
                 "Cache driver not available...switching to default",
                 [
                     'driver' => $identifier,
                     'default' => $this->defaultDriver,
                     'registered' => array_keys(
-                        $this->_registeredDrivers
+                        $this->registeredDrivers
                     )
                 ]
             );
 
             // Get default driver
             $driver = $this->getDriver($this->defaultDriver);
-
         }
         return $driver;
     }
@@ -147,13 +143,11 @@ class Factory
      */
     public function getDriver($identifier): DriverInterface
     {
-        if (!$driver = ArrayHelper::getValue($this->_registeredDrivers, $identifier)) {
-
+        if (!$driver = ArrayHelper::getValue($this->registeredDrivers, $identifier)) {
             throw new InvalidDriverException(sprintf(
                 "Driver type '%s' is not registered.",
                 $identifier
             ));
-
         }
         return $driver;
     }
@@ -168,13 +162,11 @@ class Factory
     public function registerDriver($identifier, DriverInterface $driver)
     {
         // Handle already taken
-        if (ArrayHelper::keyExists($identifier, $this->_registeredDrivers)) {
-
+        if (ArrayHelper::keyExists($identifier, $this->registeredDrivers)) {
             throw new InvalidDriverException(sprintf(
                 "Driver type '%s' is already registered.",
                 $identifier
             ));
-
         }
 
         $this->info(
@@ -185,7 +177,7 @@ class Factory
             ]
         );
 
-        $this->_registeredDrivers[$identifier] = $driver;
+        $this->registeredDrivers[$identifier] = $driver;
     }
 
     /**
@@ -197,9 +189,7 @@ class Factory
     public function registerDrivers(array $drivers)
     {
         foreach ($drivers as $handle => $driver) {
-
             $this->registerDriver($handle, $driver);
-
         }
     }
 
@@ -210,6 +200,6 @@ class Factory
      */
     public function getDrivers(): array
     {
-        return $this->_registeredDrivers;
+        return $this->registeredDrivers;
     }
 }

@@ -38,7 +38,6 @@ class Cache extends AbstractMiddleware
 
         // Ensure we have a valid pool
         if (!$this->pool instanceof CacheItemPoolInterface) {
-
             throw new InvalidCachePoolException(
                 sprintf(
                     "The class '%s' requires a cache pool that is an instance of '%s'",
@@ -46,7 +45,6 @@ class Cache extends AbstractMiddleware
                     'Psr\Cache\CacheItemPoolInterface'
                 )
             );
-
         }
     }
 
@@ -66,7 +64,6 @@ class Cache extends AbstractMiddleware
 
         // If it's cached
         if ($item->isHit()) {
-
             $this->info(
                 "Item found in Cache", [
                 'key' => $key,
@@ -79,14 +76,11 @@ class Cache extends AbstractMiddleware
             );
 
             return $response;
-
         } else {
-
             $this->info(
                 "Item not found in Cache", [
                 'key' => $key
             ]);
-
         }
 
         // Lock item
@@ -97,7 +91,6 @@ class Cache extends AbstractMiddleware
 
         // Only cache successful responses
         if ($this->isResponseSuccessful($response)) {
-
             // Set cache contents
             $item->set($response->getBody()->getContents());
 
@@ -109,15 +102,12 @@ class Cache extends AbstractMiddleware
                 'key' => $key,
                 'expires' => $item->getExpiration()
             ]);
-
         } else {
-
             $this->info(
                 "Did not save to cache because request was unsuccessful.", [
                 'key' => $key,
                 'statusCode' => $response->getStatusCode()
             ]);
-
         }
 
         return $response;
