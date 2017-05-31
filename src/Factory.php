@@ -43,7 +43,7 @@ class Factory
     /**
      * Registered cache drivers
      *
-     * @var array
+     * @var DriverInterface[]
      */
     protected $_registeredDrivers = [];
 
@@ -54,12 +54,10 @@ class Factory
      */
     public function __construct(LoggerInterface $logger)
     {
-
         $this->setLogger($logger);
 
         // Manually register the default driver
         $this->_registeredDrivers['dummy'] = new DummyDriver();
-
     }
 
     /*******************************************
@@ -73,9 +71,8 @@ class Factory
      * @return PoolInterface
      * @throws InvalidDriverException
      */
-    public function create($config = [])
+    public function create($config = []): PoolInterface
     {
-
         // Array
         $config = ArrayHelper::toArray($config);
 
@@ -110,19 +107,17 @@ class Factory
         ));
 
         return $pool;
-
     }
 
     /**
      * Get a cache driver.  If the driver is not found, return the default.
      *
      * @param $identifier
-     * @return mixed
+     * @return DriverInterface
      * @throws InvalidDriverException
      */
-    public function autoGetDriver($identifier)
+    public function autoGetDriver($identifier): DriverInterface
     {
-
         if (!$driver = ArrayHelper::getValue($this->_registeredDrivers, $identifier)) {
 
             $this->critical(
@@ -140,21 +135,18 @@ class Factory
             $driver = $this->getDriver($this->defaultDriver);
 
         }
-
         return $driver;
-
     }
 
     /**
      * Get a cache driver
      *
      * @param $identifier
-     * @return mixed
+     * @return DriverInterface
      * @throws InvalidDriverException
      */
-    public function getDriver($identifier)
+    public function getDriver($identifier): DriverInterface
     {
-
         if (!$driver = ArrayHelper::getValue($this->_registeredDrivers, $identifier)) {
 
             throw new InvalidDriverException(sprintf(
@@ -163,11 +155,8 @@ class Factory
             ));
 
         }
-
         return $driver;
-
     }
-
 
     /**
      * Register a cache driver for use
@@ -178,7 +167,6 @@ class Factory
      */
     public function registerDriver($identifier, DriverInterface $driver)
     {
-
         // Handle already taken
         if (ArrayHelper::keyExists($identifier, $this->_registeredDrivers)) {
 
@@ -198,34 +186,30 @@ class Factory
         );
 
         $this->_registeredDrivers[$identifier] = $driver;
-
     }
 
     /**
      * Register an array of drivers
      *
-     * @param $drivers
+     * @param DriverInterface[] $drivers
      * @throws InvalidDriverException
      */
-    public function registerDrivers($drivers)
+    public function registerDrivers(array $drivers)
     {
-
         foreach ($drivers as $handle => $driver) {
 
             $this->registerDriver($handle, $driver);
 
         }
-
     }
 
     /**
      * Get an array of registered cache drivers
      *
-     * @return array
+     * @return DriverInterface[]
      */
-    public function getDrivers()
+    public function getDrivers(): array
     {
         return $this->_registeredDrivers;
     }
-
 }

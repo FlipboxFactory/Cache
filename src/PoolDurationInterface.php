@@ -16,19 +16,18 @@ use Stash\Interfaces\PoolInterface;
  */
 interface PoolDurationInterface extends PoolInterface
 {
-
     /**
      * Set the cache duration
      *
-     * @param $duration
+     * @param int|\DateInterval $duration
+     * @return static
      */
     public function setItemDuration($duration);
 
     /**
      * Return the cache duration
      *
-     * @return string|int
+     * @return null|int|\DateInterval
      */
     public function getItemDuration();
-
 }

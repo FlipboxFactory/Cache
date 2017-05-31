@@ -20,7 +20,7 @@ class Pool extends BasePool implements PoolDurationInterface
     /**
      * The cache duration
      *
-     * @var string|int
+     * @var null|int|\DateInterval
      */
     protected $itemDuration;
 
@@ -29,7 +29,13 @@ class Pool extends BasePool implements PoolDurationInterface
      */
     public function setItemDuration($duration)
     {
+        if(!$duration instanceof \DateInterval) {
+            $duration = (int) $duration;
+        }
+
         $this->itemDuration = $duration;
+
+        return $this;
     }
 
     /**
@@ -45,7 +51,6 @@ class Pool extends BasePool implements PoolDurationInterface
      */
     public function getItem($key)
     {
-
         // Get cache item
         $item = parent::getItem($key);
 
@@ -53,7 +58,5 @@ class Pool extends BasePool implements PoolDurationInterface
         $item->expiresAfter($this->getItemDuration());
 
         return $item;
-
     }
-
 }

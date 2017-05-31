@@ -33,7 +33,6 @@ class Cache extends AbstractMiddleware
      */
     public function init()
     {
-
         // Parent
         parent::init();
 
@@ -49,15 +48,13 @@ class Cache extends AbstractMiddleware
             );
 
         }
-
     }
 
     /**
      * @inheritdoc
      */
-    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next = null)
+    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next = null): ResponseInterface
     {
-
         // Do parent (logging)
         parent::__invoke($request, $response);
 
@@ -124,7 +121,6 @@ class Cache extends AbstractMiddleware
         }
 
         return $response;
-
     }
 
     /**
@@ -134,9 +130,8 @@ class Cache extends AbstractMiddleware
      *
      * @return string
      */
-    private function getCacheKey(RequestInterface $request)
+    private function getCacheKey(RequestInterface $request): string
     {
         return $request->getMethod() . md5((string)$request->getUri());
     }
-
 }
