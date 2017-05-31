@@ -51,7 +51,11 @@ class Cache extends AbstractMiddleware
     /**
      * @inheritdoc
      */
-    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next = null): ResponseInterface
+    public function __invoke(
+        RequestInterface $request,
+        ResponseInterface $response,
+        callable $next = null
+    ): ResponseInterface
     {
         // Do parent (logging)
         parent::__invoke($request, $response);
