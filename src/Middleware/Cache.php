@@ -65,10 +65,12 @@ class Cache extends AbstractMiddleware
         // If it's cached
         if ($item->isHit()) {
             $this->info(
-                "Item found in Cache", [
-                'key' => $key,
-                'expires' => $item->getExpiration()
-            ]);
+                "Item found in Cache",
+                [
+                    'key' => $key,
+                    'expires' => $item->getExpiration()
+                ]
+            );
 
             // Add response body
             $response = $response->withBody(
@@ -78,9 +80,11 @@ class Cache extends AbstractMiddleware
             return $response;
         } else {
             $this->info(
-                "Item not found in Cache", [
-                'key' => $key
-            ]);
+                "Item not found in Cache",
+                [
+                    'key' => $key
+                ]
+            );
         }
 
         // Lock item
@@ -98,16 +102,20 @@ class Cache extends AbstractMiddleware
             $this->pool->save($item);
 
             $this->info(
-                "Save item to Cache", [
-                'key' => $key,
-                'expires' => $item->getExpiration()
-            ]);
+                "Save item to Cache",
+                [
+                    'key' => $key,
+                    'expires' => $item->getExpiration()
+                ]
+            );
         } else {
             $this->info(
-                "Did not save to cache because request was unsuccessful.", [
-                'key' => $key,
-                'statusCode' => $response->getStatusCode()
-            ]);
+                "Did not save to cache because request was unsuccessful.",
+                [
+                    'key' => $key,
+                    'statusCode' => $response->getStatusCode()
+                ]
+            );
         }
 
         return $response;
