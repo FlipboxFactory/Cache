@@ -15,7 +15,7 @@
   ],
   "require": {
     "php": ">=7.0",
-    "flipboxdigital/http": "^2.0",
+    "flipboxdigital/http-stream": "^2.0",
     "flipboxdigital/relay": "^2.0",
     "flipboxdigital/skeleton": "^2.0",
     "tedivm/stash": "^0.14.2",
@@ -47,18 +47,6 @@
     {
       "type": "composer",
       "url": "https://packagist.org"
-    },
-    {
-      "type": "path",
-      "url": "../http"
-    },
-    {
-      "type": "path",
-      "url": "../relay"
-    },
-    {
-      "type": "path",
-      "url": "../Skeleton"
     }
   ]
 }
