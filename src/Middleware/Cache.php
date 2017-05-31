@@ -55,8 +55,7 @@ class Cache extends AbstractMiddleware
         RequestInterface $request,
         ResponseInterface $response,
         callable $next = null
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         // Do parent (logging)
         parent::__invoke($request, $response);
 
