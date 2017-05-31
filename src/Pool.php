@@ -29,8 +29,8 @@ class Pool extends BasePool implements PoolDurationInterface
      */
     public function setItemDuration($duration)
     {
-        if(!$duration instanceof \DateInterval) {
-            $duration = (int) $duration;
+        if (!$duration instanceof \DateInterval) {
+            $duration = (int)$duration;
         }
 
         $this->itemDuration = $duration;
