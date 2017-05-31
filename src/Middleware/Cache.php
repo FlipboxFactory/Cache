@@ -9,7 +9,7 @@
 namespace Flipbox\Cache\Middleware;
 
 use Flipbox\Cache\Exceptions\InvalidCachePoolException;
-use Flipbox\Http\Factory as HttpFactory;
+use Flipbox\Http\Stream\Factory as StreamFactory;
 use Flipbox\Relay\Middleware\AbstractMiddleware;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Http\Message\RequestInterface;
@@ -75,7 +75,7 @@ class Cache extends AbstractMiddleware
 
             // Add response body
             $response = $response->withBody(
-                HttpFactory::createStream($item->get())
+                StreamFactory::create($item->get())
             );
 
             return $response;
