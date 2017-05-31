@@ -1,15 +1,9 @@
 <?php
 
 /**
- * Cache Middleware
- *
- * @package    Cache
- * @author     Flipbox Factory <hello@flipboxfactory.com>
- * @copyright  2010-2016 Flipbox Digital Limited
- * @license    https://github.com/FlipboxFactory/Cache/blob/master/LICENSE
- * @version    Release: 1.0.0
- * @link       https://github.com/FlipboxFactory/Cache
- * @since      Class available since Release 1.0.0
+ * @copyright  Copyright (c) Flipbox Digital Limited
+ * @license    https://github.com/flipbox/cache/blob/master/LICENSE
+ * @link       https://github.com/flipbox/cache
  */
 
 namespace Flipbox\Cache\Middleware;
@@ -22,6 +16,10 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Stash\Interfaces\ItemInterface;
 
+/**
+ * @author Flipbox Factory <hello@flipboxfactory.com>
+ * @since 2.0.0
+ */
 class Cache extends AbstractMiddleware
 {
 
@@ -97,7 +95,7 @@ class Cache extends AbstractMiddleware
         // Lock item
         $item->lock();
 
-        // Next
+        /** @var ResponseInterface $response */
         $response = $next($request, $response);
 
         // Only cache successful responses

@@ -1,21 +1,19 @@
 <?php
 
 /**
- * Pool
- *
- * @package    Cache
- * @author     Flipbox Factory <hello@flipboxfactory.com>
- * @copyright  2010-2016 Flipbox Digital Limited
- * @license    https://github.com/FlipboxFactory/Cache/blob/master/LICENSE
- * @version    Release: 1.0.0
- * @link       https://github.com/FlipboxFactory/Cache
- * @since      Class available since Release 1.0.0
+ * @copyright  Copyright (c) Flipbox Digital Limited
+ * @license    https://github.com/flipbox/cache/blob/master/LICENSE
+ * @link       https://github.com/flipbox/cache
  */
 
 namespace Flipbox\Cache;
 
 use Stash\Pool as BasePool;
 
+/**
+ * @author Flipbox Factory <hello@flipboxfactory.com>
+ * @since 2.0.0
+ */
 class Pool extends BasePool implements PoolDurationInterface
 {
 
